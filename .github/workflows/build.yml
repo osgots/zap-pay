@@ -25,23 +25,16 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Initialize Capacitor and Android Project
+      - name: Install Dependencies and Add Android
+        working-directory: ./zap-pay
         run: |
-          npm init -y
-          npm install @capacitor/core @capacitor/cli @capacitor/android
-          
-          # Create the required web directory
-          mkdir -p www
-          
-          # Copy the contents of your nested folder directly into www
-          cp -r zap-pay/* www/
-          
-          npx cap init zap-pay com.osgots.zappay --web-dir www
+          npm install
+          npm install @capacitor/android
           npx cap add android
           npx cap sync android
 
       - name: Build APK
-        working-directory: ./android
+        working-directory: ./zap-pay/android
         run: |
           chmod +x ./gradlew
           ./gradlew assembleDebug
@@ -50,4 +43,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: zap-pay-debug-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: zap-pay/android/app/build/outputs/apk/debug/app-debug.apk
