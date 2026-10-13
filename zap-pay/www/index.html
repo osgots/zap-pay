@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-accent="violet">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zap Pay</title>
+<link rel="icon" id="fav" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f3fb;--card:rgba(255,255,255,.72);--text:#14131f;--muted:#6c6a80;--line:rgba(20,19,31,.09);--a:#7c5cff;--a2:#ff5cb8;--on:#fff;--g:#0a9d63;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a0a12;--card:rgba(255,255,255,.07);--text:#f4f4fb;--muted:#9b9bb3;--line:rgba(255,255,255,.1);--g:#4ff0a8}}
+:root[data-theme="dark"]{--bg:#0a0a12;--card:rgba(255,255,255,.07);--text:#f4f4fb;--muted:#9b9bb3;--line:rgba(255,255,255,.1);--g:#4ff0a8}
+:root[data-accent=lime]{--a:#b8ff3d;--a2:#26e0a4;--on:#10140a}
+:root[data-accent=pink]{--a:#ff4fa3;--a2:#ff9a5c}
+:root[data-accent=blue]{--a:#3d8bff;--a2:#27d9ff}
+:root[data-accent=orange]{--a:#ff7a2f;--a2:#ffc23d;--on:#1a0e04}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Sora',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);-webkit-tap-highlight-color:transparent;transition:background .3s}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+button:focus-visible,input:focus-visible,label:focus-within{outline:2px solid var(--a);outline-offset:2px}
+.rm *{animation:none!important;transition:none!important}
+#bg{position:fixed;inset:0;z-index:-1}
+#bg::after{content:'';position:absolute;inset:0;background:var(--bg);opacity:var(--dim,.35)}
+#app{max-width:480px;margin:0 auto;min-height:100dvh;padding:0 16px 120px}
+.scr{display:none;animation:in .25s ease}.scr.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(8px)}}
+.card{background:var(--card);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--line);border-radius:22px}
+.grad{background:linear-gradient(135deg,var(--a),var(--a2));color:var(--on)}
+.top{display:flex;justify-content:space-between;align-items:center;padding:16px 0}
+.hi{display:flex;gap:12px;align-items:center}.hi img{border-radius:12px}
+small{color:var(--muted);font-size:12px;display:block}
+.ib{width:42px;height:42px;border-radius:14px;font-size:18px}
+h2{font-size:15px;margin:22px 0 10px;display:flex;justify-content:space-between;align-items:center}
+h1{font-size:26px;margin:12px 0 4px;letter-spacing:-.5px}
+.link{color:var(--a);font-size:12px;font-weight:600}
+.bal{padding:20px;position:relative;overflow:hidden}
+.bal small{color:inherit;opacity:.75}
+.bal .n{font-size:36px;font-weight:800;letter-spacing:-1px;margin:4px 0 14px;display:flex;align-items:center;gap:10px}
+.bal .n button{font-size:18px;opacity:.8}
+.bal::after{content:'';position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.18)}
+.row2{display:flex;gap:10px}
+.pill{padding:10px 16px;border-radius:14px;font-weight:600;font-size:13px;background:rgba(0,0,0,.2);color:inherit;transition:transform .12s}
+.pill:active,.act:active,.fr:active{transform:scale(.93)}
+.acts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.act{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;font-weight:600;transition:transform .12s}
+.act span{width:56px;height:56px;border-radius:18px;display:grid;place-items:center;font-size:24px}
+.snap{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px;scrollbar-width:none}
+.snap>*{scroll-snap-align:start;flex:0 0 78%;padding:16px;font-size:13px}
+.snap b{display:block;font-size:15px;margin-bottom:4px}
+.frs{display:flex;gap:14px;overflow-x:auto;scrollbar-width:none}
+.fr{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;min-width:56px;transition:transform .12s}
+.av{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-size:22px;background:var(--card);border:1px solid var(--line);flex:none}
+.tx{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.tx:last-child{border:0}.tx>div{flex:1}.tx b{font-size:14px}.tx .g{color:var(--g)}
+.list{overflow:hidden}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:8px 14px;border-radius:99px;border:1px solid var(--line);font-size:12px;font-weight:600;background:var(--card)}
+.chip.on{background:linear-gradient(135deg,var(--a),var(--a2));color:var(--on);border-color:transparent}
+.bars{display:flex;align-items:flex-end;gap:10px;height:110px;padding:16px}
+.bars div{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px;height:100%;font-size:10px;color:var(--muted)}
+.bars i{width:100%;border-radius:8px;background:linear-gradient(var(--a),var(--a2));min-height:4px;transition:height .5s}
+.vf{height:230px;margin:10px auto;border-radius:26px;position:relative;overflow:hidden;background:rgba(0,0,0,.45);display:grid;place-items:center;color:#fff}
+.vf::before{content:'';position:absolute;inset:34px;border:2px solid var(--a);border-radius:20px;mask:linear-gradient(#000 0 0) top/100% 24px no-repeat,linear-gradient(#000 0 0) bottom/100% 24px no-repeat;-webkit-mask:linear-gradient(#000 0 0) top/100% 24px no-repeat,linear-gradient(#000 0 0) bottom/100% 24px no-repeat}
+.vf i{position:absolute;left:40px;right:40px;height:3px;border-radius:3px;background:var(--a);box-shadow:0 0 18px var(--a);animation:scan 2s ease-in-out infinite alternate}
+@keyframes scan{from{top:48px}to{top:calc(100% - 52px)}}
+.in{width:100%;padding:14px 16px;border-radius:16px;border:1px solid var(--line);background:var(--card);color:var(--text);font:inherit;font-size:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.sc{height:110px;border-radius:20px;display:grid;place-items:center;text-align:center;font-weight:800;position:relative;overflow:hidden;font-size:13px;transition:transform .15s}
+.sc.cv{background:repeating-linear-gradient(45deg,#8a8aa0,#8a8aa0 8px,#a2a2b8 8px,#a2a2b8 16px);color:#fff}
+.sc.cv:active{transform:scale(.95)}
+.sc.rv{background:linear-gradient(135deg,var(--a),var(--a2));color:var(--on);font-size:22px;animation:pop .4s}
+@keyframes pop{50%{transform:scale(1.12) rotate(-3deg)}}
+.dots{display:flex;gap:6px;margin-top:10px}.dots i{flex:1;height:8px;border-radius:8px;background:var(--line)}.dots i.f{background:linear-gradient(90deg,var(--a),var(--a2))}
+.sec{padding:16px;margin-bottom:12px}
+.sec h3{margin:0 0 12px;font-size:14px}
+.seg{display:flex;background:var(--line);border-radius:14px;padding:4px}
+.seg button{flex:1;padding:9px;border-radius:11px;font-size:12px;font-weight:600}
+.seg button.on{background:linear-gradient(135deg,var(--a),var(--a2));color:var(--on)}
+.sw{display:flex;gap:12px}.sw button{width:44px;height:44px;border-radius:50%;border:3px solid transparent;transition:transform .15s}
+.sw button.on{border-color:var(--text);transform:scale(1.12)}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.tile{height:64px;border-radius:16px;border:2px solid var(--line);font-size:11px;font-weight:600;display:grid;place-items:center;position:relative;overflow:hidden;background:var(--bg)}
+.tile.on{border-color:var(--a)}
+.tile img{width:44px;height:44px;border-radius:12px}
+.tile.ic{height:84px;gap:2px;padding-top:8px}
+.tog{display:flex;justify-content:space-between;align-items:center;padding:10px 0;font-size:13px;font-weight:600}
+.tog input{appearance:none;-webkit-appearance:none;width:46px;height:28px;border-radius:20px;background:var(--line);position:relative;transition:background .2s;cursor:pointer;margin:0}
+.tog input::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .2s}
+.tog input:checked{background:var(--a)}.tog input:checked::after{transform:translateX(18px)}
+input[type=range]{width:100%;accent-color:var(--a)}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:5;display:flex;justify-content:center;padding:0 12px calc(10px + env(safe-area-inset-bottom,0px))}
+nav div{width:100%;max-width:456px;display:flex;justify-content:space-around;align-items:center;padding:8px 6px}
+nav button{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;font-weight:600;color:var(--muted);padding:6px 10px;min-width:56px}
+nav button span{font-size:20px;filter:grayscale(1);opacity:.7;transition:transform .2s}
+nav button.on{color:var(--text)}nav button.on span{filter:none;opacity:1;transform:translateY(-2px) scale(1.15)}
+nav .fab{width:60px;height:60px;border-radius:20px;margin-top:-30px;padding:0;color:var(--on);box-shadow:0 10px 26px -6px var(--a);justify-content:center;min-width:0}
+nav .fab span{filter:none;opacity:1;font-size:26px}
+#shade{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:10;opacity:0;pointer-events:none;transition:opacity .25s}
+#shade.on{opacity:1;pointer-events:auto}
+#sheet{position:fixed;left:0;right:0;bottom:0;z-index:11;max-width:480px;margin:0 auto;background:var(--bg);border-radius:28px 28px 0 0;border:1px solid var(--line);padding:16px 18px calc(16px + env(safe-area-inset-bottom,0px));transform:translateY(105%);transition:transform .32s cubic-bezier(.2,.9,.3,1);text-align:center}
+#sheet.on{transform:none}
+.grab{width:40px;height:4px;border-radius:4px;background:var(--line);margin:0 auto 12px}
+.to{display:flex;align-items:center;gap:10px;justify-content:center}
+.amt{font-size:48px;font-weight:800;letter-spacing:-2px;margin:10px 0;min-height:60px}
+.amt.shake,#pinDots.shake{animation:shk .35s}
+@keyframes shk{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+#kp{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 6px}
+#kp button{height:54px;border-radius:16px;font-size:22px;font-weight:600;background:var(--card);border:1px solid var(--line);transition:transform .08s,background .1s}
+#kp button:active{transform:scale(.92);background:var(--line)}
+#kp.pin [data-k="."]{visibility:hidden}
+.big{width:100%;padding:16px;border-radius:18px;font-weight:800;font-size:15px;margin-top:8px}
+#dots{display:flex;gap:16px;justify-content:center;margin:26px 0}
+#dots i{width:16px;height:16px;border-radius:50%;border:2px solid var(--muted);transition:.15s}
+#dots i.f{background:var(--a);border-color:var(--a);transform:scale(1.2)}
+.ok{width:92px;height:92px;border-radius:50%;margin:18px auto;display:grid;place-items:center;font-size:46px;animation:pop .5s}
+.cf{position:absolute;left:50%;top:38%;pointer-events:none;animation:cf 1.3s ease-out forwards;font-size:18px}
+@keyframes cf{to{transform:translate(var(--x),var(--y)) rotate(var(--r));opacity:0}}
+#toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top,0px));transform:translate(-50%,-90px);z-index:20;padding:12px 18px;border-radius:16px;font-size:13px;font-weight:600;transition:transform .3s;max-width:90%;text-align:center}
+#toast.on{transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<div id="toast" class="card"></div>
+<main id="app">
+
+<section class="scr on" id="home">
+ <header class="top"><div class="hi"><img id="logo" width="40" height="40" alt=""><div><small>Zap Pay</small><b>Money, but make it fast</b></div></div><button class="ib card" data-go="me" aria-label="Settings">🎨</button></header>
+ <div class="bal grad card">
+  <small>Wallet balance · UPI linked</small>
+  <div class="n"><span id="bal"></span><button id="eye" aria-label="Show or hide balance">👁</button></div>
+  <div class="row2"><button class="pill" id="add">＋ Add ₹500</button><button class="pill" data-send="Pay anyone|💸">Send money</button></div>
+ </div>
+ <h2>Quick pay</h2>
+ <div class="acts">
+  <button class="act" data-go="scan"><span class="card">📷</span>Scan QR</button>
+  <button class="act" data-go="scan"><span class="card">👤</span>To contact</button>
+  <button class="act" data-go="scan"><span class="card">@</span>UPI ID</button>
+  <button class="act" id="chk"><span class="card">🏦</span>Balance</button>
+  <button class="act" data-send="Jio Prepaid|📱"><span class="card">📱</span>Recharge</button>
+  <button class="act" data-send="Electricity Bill|💡"><span class="card">💡</span>Bills</button>
+  <button class="act" data-send="FASTag|🚗"><span class="card">🚗</span>FASTag</button>
+  <button class="act" data-send="Split Bill|🍕"><span class="card">🍕</span>Split</button>
+ </div>
+ <h2>Offers for you</h2>
+ <div class="snap">
+  <div class="card"><b>5% back on chai ☕</b>Pay at any cafe with Zap and get cashback.</div>
+  <div class="card grad"><b>3-day streak 🔥</b>Pay once a day for 7 days to unlock ₹50.</div>
+  <div class="card"><b>Split with friends 🍕</b>Share any bill in two taps.</div>
+ </div>
+ <h2>Pay friends</h2>
+ <div class="frs" id="frH"></div>
+ <h2>Recent <button class="link" data-go="hist">See all</button></h2>
+ <div class="card list" id="txH"></div>
+</section>
+
+<section class="scr" id="scan">
+ <h1>Scan &amp; pay</h1><small>Point at any UPI QR code</small>
+ <div class="vf"><i></i><span style="opacity:.7;font-size:13px">Camera view (demo)</span></div>
+ <button class="big grad" id="sim">Simulate scan</button>
+ <h2>Pay by UPI ID</h2>
+ <div class="row2"><input class="in" id="upi" placeholder="name@bank" autocapitalize="off" autocomplete="off"><button class="pill grad" id="upiGo" style="background:linear-gradient(135deg,var(--a),var(--a2))">Pay</button></div>
+ <h2>Contacts</h2>
+ <div class="grid4" id="frS"></div>
+</section>
+
+<section class="scr" id="hist">
+ <h1>Activity</h1><small>This week's spending</small>
+ <div class="card bars" id="bars" style="margin-top:12px"></div>
+ <div class="chips" style="margin:16px 0" id="flt"><button class="chip on" data-f="all">All</button><button class="chip" data-f="out">Sent</button><button class="chip" data-f="in">Received</button></div>
+ <div class="card list" id="txA"></div>
+</section>
+
+<section class="scr" id="rew">
+ <h1>Rewards</h1><small>Scratch, stack, repeat</small>
+ <div class="card grad" style="padding:20px;margin-top:12px"><small style="color:inherit;opacity:.75">Zap points</small><div style="font-size:34px;font-weight:800" id="pts">1,240</div><div class="dots" id="strk"></div><small style="color:inherit;opacity:.75;margin-top:8px">🔥 3-day streak · 4 more days for ₹50</small></div>
+ <h2>Scratch cards <button class="link" id="rst">Reset (demo)</button></h2>
+ <div class="grid4" style="grid-template-columns:repeat(3,1fr)" id="scs"></div>
+</section>
+
+<section class="scr" id="me">
+ <h1>Make it yours</h1><small>yourname@zap · changes save automatically</small>
+ <div class="sec card" style="margin-top:12px"><h3>Theme</h3>
+  <div class="seg" id="mode"><button data-mode="auto">Auto</button><button data-mode="dark">Dark</button><button data-mode="light">Light</button></div>
+  <h3 style="margin-top:16px">Accent colour</h3>
+  <div class="sw" id="acc"></div></div>
+ <div class="sec card"><h3>Background</h3>
+  <div class="tiles" id="bgs"></div>
+  <small style="margin:12px 0 4px">Dim background</small><input type="range" id="dim" min="0" max="0.9" step="0.05" aria-label="Dim background"></div>
+ <div class="sec card"><h3>App icon</h3><div class="tiles" id="ics"></div>
+  <small style="margin-top:10px">Updates the logo and browser tab icon here. On Android and iOS apps, this switches the launcher icon.</small></div>
+ <div class="sec card"><h3>Sound &amp; feel</h3>
+  <label class="tog">Sound effects<input type="checkbox" id="tSnd"></label>
+  <label class="tog">Haptic feedback<input type="checkbox" id="tHap"></label>
+  <label class="tog">Hide balance<input type="checkbox" id="tHide"></label>
+  <label class="tog">Reduce motion<input type="checkbox" id="tRm"></label>
+  <button class="big chip" id="tst" style="margin-top:6px">🔊 Test sounds</button></div>
+ <input type="file" id="file" accept="image/*" hidden>
+</section>
+</main>
+
+<nav><div class="card">
+ <button data-go="home" class="on"><span>🏠</span>Home</button>
+ <button data-go="hist"><span>📊</span>Activity</button>
+ <button class="fab grad" data-go="scan" aria-label="Scan and pay"><span>📷</span></button>
+ <button data-go="rew"><span>🎁</span>Rewards</button>
+ <button data-go="me"><span>🎨</span>Style</button>
+</div></nav>
+
+<div id="shade"></div>
+<div id="sheet" role="dialog" aria-modal="true">
+ <div class="grab"></div>
+ <div class="to"><span class="av" id="shAv"></span><div style="text-align:left"><small>Paying</small><b id="shTo"></b></div></div>
+ <div id="pAmt"><div class="amt" id="amtv"></div>
+  <div class="chips" style="justify-content:center" id="notes"><button class="chip">🍕 Food</button><button class="chip">🎬 Fun</button><button class="chip">🧾 Bills</button><button class="chip">🎁 Gift</button></div>
+  <button class="big grad" id="pay">Pay securely</button></div>
+ <div id="pPin" hidden><small style="margin-top:18px">Enter your 4-digit UPI PIN (any 4 digits in demo)</small><div id="dots"><i></i><i></i><i></i><i></i></div></div>
+ <div id="pOk" hidden style="position:relative"><div class="ok grad">✓</div><h1 id="okMsg" style="font-size:22px"></h1><small>Instant · No fees</small><button class="big grad" id="done" style="margin-top:20px">Done</button></div>
+ <div id="kp"></div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const fmt=n=>'₹'+n.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+let S={mode:'dark',accent:'violet',bg:'aurora',custom:'',dim:.35,icon:0,snd:true,hap:true,hide:false,rm:false,bal:24580.5,
+ tx:[{n:'Chai Point',e:'☕',a:-120,s:'Food',t:'Today'},{n:'Priya',e:'🦋',a:850,s:'UPI',t:'Yesterday'},{n:'Swiggy',e:'🍔',a:-349,s:'Food',t:'Yesterday'},{n:'Cashback',e:'🎁',a:25,s:'Reward',t:'Mon'},{n:'Jio Prepaid',e:'📱',a:-299,s:'Bills',t:'Sun'},{n:'Kabir',e:'🎧',a:-500,s:'UPI',t:'Sat'}]};
+try{Object.assign(S,JSON.parse(localStorage.getItem('zap')||'{}'))}catch(e){}
+const save=()=>{try{localStorage.setItem('zap',JSON.stringify(S))}catch(e){}};
+const FR=[['Aarav','😎'],['Priya','🦋'],['Kabir','🎧'],['Mom','🌸'],['Zoya','✨'],['Dev','🎮'],['Riya','🌈'],['Sam','🛹']];
+const BG={aurora:'radial-gradient(circle at 15% 10%,#7c5cffaa,transparent 50%),radial-gradient(circle at 90% 30%,#ff5cb877,transparent 45%),radial-gradient(circle at 40% 100%,#27d9ff66,transparent 50%)',
+ sunset:'linear-gradient(160deg,#ff9a5c99,#ff4fa399 50%,#4b2bff88)',ocean:'linear-gradient(180deg,#27d9ff77,#3d5bff88 60%,#10104a)',mint:'linear-gradient(160deg,#b8ff3d66,#26e0a488 60%,#0a3a4a99)',
+ grid:'linear-gradient(var(--line) 1px,transparent 1px) 0 0/30px 30px,linear-gradient(90deg,var(--line) 1px,transparent 1px) 0 0/30px 30px',plain:'none'};
+const ACC={violet:['#7c5cff','#ff5cb8'],lime:['#b8ff3d','#26e0a4'],pink:['#ff4fa3','#ff9a5c'],blue:['#3d8bff','#27d9ff'],orange:['#ff7a2f','#ffc23d']};
+const IC=[{n:'Zap',g:['#7c5cff','#ff5cb8'],e:'⚡'},{n:'Lime',g:['#b8ff3d','#26e0a4'],e:'💸'},{n:'Sunset',g:['#ff9a3c','#ff3c7a'],e:'🔥'},{n:'Ocean',g:['#3cc8ff','#3c5bff'],e:'🌊'},{n:'Noir',g:['#1a1a22','#4a4a5a'],e:'🖤'},{n:'Candy',g:['#ff8ad8','#8aa2ff'],e:'🍬'}];
+const ic={};
+function iconURL(i){if(ic[i])return ic[i];const c=document.createElement('canvas');c.width=c.height=96;const x=c.getContext('2d'),g=x.createLinearGradient(0,0,96,96);g.addColorStop(0,IC[i].g[0]);g.addColorStop(1,IC[i].g[1]);x.fillStyle=g;x.beginPath();x.roundRect?x.roundRect(0,0,96,96,26):x.rect(0,0,96,96);x.fill();x.font='54px serif';x.textAlign='center';x.textBaseline='middle';x.fillText(IC[i].e,48,52);return ic[i]=c.toDataURL()}
+
+/* sound + haptics */
+let AC;
+function tone(f,d=.08,t='sine',v=.12,w=0){if(!S.snd)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain(),n=AC.currentTime+w;o.type=t;o.frequency.value=f;g.gain.setValueAtTime(v,n);g.gain.exponentialRampToValueAtTime(.001,n+d);o.connect(g);g.connect(AC.destination);o.start(n);o.stop(n+d)}catch(e){}}
+const sfx={tap:()=>tone(520,.05,'triangle',.1),key:()=>tone(820,.04,'square',.04),coin:()=>{tone(988,.08,'square',.06);tone(1319,.3,'square',.06,.08)},
+ ok:()=>[523,659,784,1047].forEach((f,i)=>tone(f,.28,'sine',.14,i*.09)),err:()=>{tone(220,.2,'sawtooth',.08);tone(165,.25,'sawtooth',.08,.12)}};
+const buzz=p=>{if(S.hap&&navigator.vibrate)try{navigator.vibrate(p)}catch(e){}};
+let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2000)}
+
+/* render */
+const txH=t=>`<div class="tx"><span class="av">${t.e}</span><div><b>${t.n}</b><small>${t.s||'UPI'} · ${t.t}</small></div><b class="${t.a<0?'':'g'}">${t.a<0?'−':'+'}${fmt(Math.abs(t.a))}</b></div>`;
+let flt='all';
+function render(){
+ $('#bal').textContent=S.hide?'₹ ••••••':fmt(S.bal);
+ $('#txH').innerHTML=S.tx.slice(0,4).map(txH).join('');
+ $('#txA').innerHTML=S.tx.filter(t=>flt==='all'||(flt==='out'?t.a<0:t.a>0)).map(txH).join('')||'<div class="tx"><small>Nothing here yet. Make a payment to see it.</small></div>';
+ const v=[320,0,540,210,899,120,430],m=Math.max(...v);
+ $('#bars').innerHTML=v.map((x,i)=>`<div><i style="height:${Math.max(4,x/m*70)}px"></i>${'MTWTFSS'[i]}</div>`).join('');
+ $('#strk').innerHTML=[1,1,1,0,0,0,0].map(x=>`<i class="${x?'f':''}"></i>`).join('');
+}
+function apply(){
+ const r=document.documentElement;
+ S.mode==='auto'?r.removeAttribute('data-theme'):r.dataset.theme=S.mode;
+ r.dataset.accent=S.accent;r.classList.toggle('rm',!!S.rm);
+ const b=$('#bg');b.style.background=S.bg==='custom'&&S.custom?`center/cover url(${S.custom})`:(BG[S.bg]||'none');b.style.setProperty('--dim',S.dim);
+ const u=iconURL(S.icon);$('#fav').href=u;$('#logo').src=u;
+ $$('[data-mode]').forEach(x=>x.classList.toggle('on',x.dataset.mode===S.mode));
+ $$('#acc button').forEach(x=>x.classList.toggle('on',x.dataset.a===S.accent));
+ $$('#bgs .tile').forEach(x=>x.classList.toggle('on',x.dataset.b===S.bg));
+ $$('#ics .tile').forEach(x=>x.classList.toggle('on',+x.dataset.i===S.icon));
+ $('#dim').value=S.dim;$('#tSnd').checked=S.snd;$('#tHap').checked=S.hap;$('#tHide').checked=S.hide;$('#tRm').checked=S.rm;
+ render();save();
+}
+/* build static bits */
+$('#frH').innerHTML=FR.map(f=>`<button class="fr" data-send="${f[0]}|${f[1]}"><span class="av">${f[1]}</span>${f[0]}</button>`).join('');
+$('#frS').innerHTML=FR.map(f=>`<button class="fr" data-send="${f[0]}|${f[1]}"><span class="av">${f[1]}</span>${f[0]}</button>`).join('');
+$('#acc').innerHTML=Object.keys(ACC).map(k=>`<button data-a="${k}" aria-label="${k}" style="background:linear-gradient(135deg,${ACC[k][0]},${ACC[k][1]})"></button>`).join('');
+$('#bgs').innerHTML=Object.keys(BG).map(k=>`<button class="tile" data-b="${k}" style="background:${BG[k]==='none'?'var(--bg)':BG[k]},var(--bg)">${k}</button>`).join('')+'<button class="tile" id="upl">📷 Upload</button>';
+$('#ics').innerHTML=IC.map((x,i)=>`<button class="tile ic" data-i="${i}"><img src="${iconURL(i)}" alt="">${x.n}</button>`).join('');
+
+/* navigation */
+function go(id){$$('.scr').forEach(s=>s.classList.toggle('on',s.id===id));$$('nav button[data-go]').forEach(b=>b.classList.toggle('on',b.dataset.go===id&&!b.classList.contains('fab')));scrollTo(0,0);sfx.tap();buzz(6)}
+
+/* send flow */
+let P={};
+const KEYS=['1','2','3','4','5','6','7','8','9','.','0','<'];
+$('#kp').innerHTML=KEYS.map(k=>`<button data-k="${k}" aria-label="${k==='<'?'Backspace':k}">${k==='<'?'⌫':k}</button>`).join('');
+function openSend(n,e){P={name:n,e,amt:'',pin:'',step:'amt',note:''};$$('#notes .chip').forEach(c=>c.classList.remove('on'));draw();$('#sheet').classList.add('on');$('#shade').classList.add('on');sfx.tap()}
+function closeSheet(){$('#sheet').classList.remove('on');$('#shade').classList.remove('on')}
+function draw(){const s=P.step;
+ $('#pAmt').hidden=s!=='amt';$('#pPin').hidden=s!=='pin';$('#pOk').hidden=s!=='ok';$('#kp').hidden=s==='ok';$('#kp').classList.toggle('pin',s==='pin');
+ $('#shTo').textContent=P.name;$('#shAv').textContent=P.e;$('#amtv').textContent='₹'+(P.amt||'0');
+ $$('#dots i').forEach((d,i)=>d.classList.toggle('f',i<P.pin.length));
+ $('#okMsg').textContent=`₹${P.amt} sent to ${P.name}`}
+function shake(el){el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake');sfx.err();buzz([60,40,60])}
+$('#kp').onclick=e=>{const k=e.target.closest('button')?.dataset.k;if(!k)return;sfx.key();buzz(8);
+ if(P.step==='amt'){if(k==='<')P.amt=P.amt.slice(0,-1);else if(k==='.'){if(!P.amt.includes('.'))P.amt=(P.amt||'0')+'.'}else if(P.amt.replace('.','').length<7&&!/\.\d\d$/.test(P.amt))P.amt=(P.amt==='0'?'':P.amt)+k}
+ else if(P.step==='pin'){if(k==='<')P.pin=P.pin.slice(0,-1);else if(k!=='.'&&P.pin.length<4)P.pin+=k;if(P.pin.length===4)setTimeout(finish,250)}
+ draw()};
+$('#notes').onclick=e=>{const c=e.target.closest('.chip');if(!c)return;sfx.tap();const on=!c.classList.contains('on');$$('#notes .chip').forEach(x=>x.classList.remove('on'));c.classList.toggle('on',on);P.note=on?c.textContent.slice(3):''};
+$('#pay').onclick=()=>{const a=parseFloat(P.amt);if(!(a>0)){shake($('#amtv'));return toast('Enter an amount first')}
+ if(a>S.bal){shake($('#amtv'));return toast('Not enough balance. Add money first.')}
+ P.step='pin';sfx.tap();draw()};
+function finish(){const a=parseFloat(P.amt);S.bal-=a;S.tx.unshift({n:P.name,e:P.e,a:-a,s:P.note||'UPI',t:'Just now'});P.step='ok';apply();draw();sfx.ok();buzz([30,40,30,40,80]);boom($('#pOk'))}
+function boom(h){for(let i=0;i<28;i++){const s=document.createElement('span');s.className='cf';s.textContent=['✨','💸','🎉','⚡','💜'][i%5];s.style.cssText=`--x:${(Math.random()-.5)*340}px;--y:${(Math.random()-.7)*300}px;--r:${Math.random()*540}deg`;h.appendChild(s);setTimeout(()=>s.remove(),1400)}}
+$('#done').onclick=()=>{closeSheet();sfx.tap()};
+$('#shade').onclick=closeSheet;
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
+
+/* scratch cards */
+function cards(){$('#scs').innerHTML=[0,1,2].map(i=>`<button class="sc cv" data-sc="${i}">Scratch<br>me ✨</button>`).join('')}
+cards();
+$('#scs').onclick=e=>{const c=e.target.closest('.sc.cv');if(!c)return;const v=1+Math.floor(Math.random()*50);c.className='sc rv';c.textContent='₹'+v;
+ S.bal+=v;S.tx.unshift({n:'Scratch reward',e:'🎁',a:v,s:'Reward',t:'Just now'});apply();sfx.coin();buzz([20,30,20]);boom(c);toast(`You won ₹${v} 🎉`)};
+$('#rst').onclick=()=>{cards();sfx.tap()};
+
+/* global click delegation */
+document.addEventListener('click',e=>{
+ const g=e.target.closest('[data-go]');if(g)return go(g.dataset.go);
+ const s=e.target.closest('[data-send]');if(s){const[n,em]=s.dataset.send.split('|');return openSend(n,em)}
+ const f=e.target.closest('[data-f]');if(f){flt=f.dataset.f;$$('#flt .chip').forEach(c=>c.classList.toggle('on',c===f));sfx.tap();return render()}
+ const m=e.target.closest('[data-mode]');if(m){S.mode=m.dataset.mode;sfx.tap();return apply()}
+ const a=e.target.closest('[data-a]');if(a){S.accent=a.dataset.a;sfx.coin();return apply()}
+ const b=e.target.closest('[data-b]');if(b){S.bg=b.dataset.b;sfx.tap();return apply()}
+ const i=e.target.closest('[data-i]');if(i){S.icon=+i.dataset.i;sfx.coin();toast(`App icon: ${IC[S.icon].n}`);return apply()}
+});
+$('#add').onclick=()=>{S.bal+=500;S.tx.unshift({n:'Added to wallet',e:'➕',a:500,s:'Wallet',t:'Just now'});apply();sfx.coin();buzz(15);toast('₹500 added')};
+$('#eye').onclick=()=>{S.hide=!S.hide;sfx.tap();apply()};
+$('#chk').onclick=()=>{sfx.coin();toast('Available: '+fmt(S.bal))};
+$('#sim').onclick=()=>{const m=[['Chai Point','☕'],['Metro Mart','🛒'],['Blue Tokai','🫘']][Math.floor(Math.random()*3)];sfx.coin();buzz(20);openSend(m[0],m[1])};
+$('#upiGo').onclick=()=>{const v=$('#upi').value.trim();if(!/^[\w.\-]{2,}@[a-z]{2,}$/i.test(v)){sfx.err();return toast('Enter a valid UPI ID like name@bank')}openSend(v,'👤')};
+$('#dim').oninput=e=>{S.dim=+e.target.value;apply()};
+$('#tSnd').onchange=e=>{S.snd=e.target.checked;apply();sfx.coin()};
+$('#tHap').onchange=e=>{S.hap=e.target.checked;apply();buzz(30)};
+$('#tHide').onchange=e=>{S.hide=e.target.checked;apply()};
+$('#tRm').onchange=e=>{S.rm=e.target.checked;apply()};
+$('#tst').onclick=()=>{sfx.key();setTimeout(sfx.coin,200);setTimeout(sfx.ok,600);setTimeout(sfx.err,1400);buzz([20,30,20])};
+$('#upl').onclick=()=>$('#file').click();
+$('#file').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);S.custom=c.toDataURL('image/jpeg',.8);S.bg='custom';apply();sfx.ok();toast('Background updated')};im.src=r.result};r.readAsDataURL(f)};
+apply();
+</script>
+</body>
+</html>
